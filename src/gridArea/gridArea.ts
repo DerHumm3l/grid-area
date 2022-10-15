@@ -1,8 +1,4 @@
-interface GridAreaStyle {
-  areas: string;
-  columns: string;
-  rows: string;
-}
+import { GridAreaStyle } from "./gridAreaStyle";
 
 export class GridArea {
   protected columnCount: number = 0;
@@ -16,7 +12,7 @@ export class GridArea {
   insert(...elems: any) {}
 
   getTemplateStyle(): GridAreaStyle {
-    return { areas: "", columns: "", rows: "" };
+    return { areas: "a", columns: "b", rows: "c" };
   }
 
   protected insertElement(elem: any) {}
