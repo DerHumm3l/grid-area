@@ -1,8 +1,10 @@
 import { GridAreaStyle } from "./gridAreaStyle";
+import { GridElement } from "./gridElement";
 
 export class GridArea {
   protected columnCount: number = 0;
   protected rowCount: number = 0;
+  protected elements: GridElement[] = [];
   protected area!: string[][];
 
   constructor(columnCount: number, rowCount: number) {
@@ -12,7 +14,18 @@ export class GridArea {
     this.scaffold();
   }
 
-  insert(...elems: any) {}
+  insert(...elems: GridElement[]) {
+    elems.forEach((elem) => {
+      if (!elem) {
+        return;
+      }
+
+      // validate elem
+
+      this.insertElement(elem);
+      this.elements.push(elem);
+    });
+  }
 
   getTemplateStyle(): GridAreaStyle {
     return { areas: "a", columns: "b", rows: "c" };
@@ -24,5 +37,14 @@ export class GridArea {
     );
   }
 
-  protected insertElement(elem: any) {}
+  protected insertElement(elem: GridElement) {
+    const colEnd = elem.column + elem.columnSpan;
+    const rowEnd = elem.row + elem.rowSpan;
+
+    for (let col = elem.column; col < colEnd; col++) {
+      for (let row = elem.row; row < rowEnd; row++) {
+        this.area[row][col] = elem.name;
+      }
+    }
+  }
 }
