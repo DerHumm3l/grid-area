@@ -20,11 +20,18 @@ export class GridArea {
         return;
       }
 
-      // validate elem
+      const inserted = this.insertElement(elem);
 
-      this.insertElement(elem);
-      this.elements.push(elem);
+      if (inserted) {
+        this.elements.push(elem);
+      } else {
+        this.rollback(elem);
+      }
     });
+  }
+
+  getArea() {
+    return this.area;
   }
 
   getTemplateStyle(): GridAreaStyle {
@@ -37,14 +44,34 @@ export class GridArea {
     );
   }
 
+  protected rollback(newElem: GridElement) {
+    for (const row of this.area) {
+      for (let elem of row) {
+        if (elem === newElem.name) {
+          elem = ".";
+        }
+      }
+    }
+  }
+
   protected insertElement(elem: GridElement) {
     const colEnd = elem.column + elem.columnSpan;
     const rowEnd = elem.row + elem.rowSpan;
 
     for (let col = elem.column; col < colEnd; col++) {
       for (let row = elem.row; row < rowEnd; row++) {
+        if (this.area[row] || this.area[col][row]) {
+          continue;
+        }
+
+        if (this.area[row][col] !== ".") {
+          return false;
+        }
+
         this.area[row][col] = elem.name;
       }
     }
+
+    return true;
   }
 }
