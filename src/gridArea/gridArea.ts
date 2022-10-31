@@ -44,11 +44,11 @@ export class GridArea {
     );
   }
 
-  protected rollback(newElem: GridElement) {
-    for (const row of this.area) {
-      for (let elem of row) {
-        if (elem === newElem.name) {
-          elem = ".";
+  protected rollback(elem: GridElement) {
+    for (let col = 0; col < this.columnCount; col++) {
+      for (let row = 0; row < this.rowCount; row++) {
+        if (this.area[row][col] == elem.name) {
+          this.area[row][col] = ".";
         }
       }
     }
@@ -60,7 +60,7 @@ export class GridArea {
 
     for (let col = elem.column; col < colEnd; col++) {
       for (let row = elem.row; row < rowEnd; row++) {
-        if (this.area[row] || this.area[col][row]) {
+        if (!this.area[row] || !this.area[col][row]) {
           continue;
         }
 
